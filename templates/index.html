@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TEST SERVER EVENT</title>
+</head>
+<body>
+    <div id="will_changed">Watch this space...</div>
+    <a href="{{ url_for('other') }}">go next page</a>
+    <script>
+        var targetContainer = document.getElementById("will_changed");
+        var eventSource = new EventSource("/stream")
+        eventSource.onmessage = function(e) {
+            targetContainer.innerHTML = e.data;
+        };
+    </script>
+</body>
+</html>
