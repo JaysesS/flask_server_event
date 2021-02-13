@@ -7,13 +7,38 @@
 </head>
 <body>
     <div id="will_changed">Watch this space...</div>
+    <input type="text" name="file_content" id="file_content_input" value="1">
+    <div id="file_content_changed">Watch this space...</div>
     <a href="{{ url_for('other') }}">go next page</a>
+
+
     <script>
-        var targetContainer = document.getElementById("will_changed");
-        var eventSource = new EventSource("/stream")
-        eventSource.onmessage = function(e) {
-            targetContainer.innerHTML = e.data;
-        };
+        
+        document.addEventListener("DOMContentLoaded", function(event) {
+            
+            var targetContainer = document.getElementById("will_changed");
+            var targetContainerFile = document.getElementById("file_content_changed");
+            var file_input = document.getElementById("file_content_input")
+
+            var eventSource = new EventSource("/stream")
+            eventSource.onmessage = function(e) {
+                targetContainer.innerHTML = e.data;
+            };
+
+            let eventSourceFile = new EventSource("/stream_with_args?file_name=" + file_input.value)
+            eventSourceFile.onmessage = function(e) {
+                targetContainerFile.innerHTML = e.data;
+            };
+            
+            
+            file_input.addEventListener('input', (evt) => {
+                eventSourceFile.close();
+                eventSourceFile = new EventSource("/stream_with_args?file_name=" + file_input.value)
+                eventSourceFile.onmessage = function(e) {
+                    targetContainerFile.innerHTML = e.data;
+                };
+            });
+          });
     </script>
 </body>
 </html>
