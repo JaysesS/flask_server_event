@@ -6,7 +6,6 @@ from time import sleep
 app = Flask(__name__)
 
 def get_message():
-    '''this could be any function that blocks until data is ready'''
     s = time.ctime(time.time())
     return s
 
